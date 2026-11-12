@@ -56,7 +56,7 @@ let
       pkgs.${"python" + builtins.replaceStrings [ "." ] [ "" ] pythonVersion}
         or (throw "pdm-purifier: nixpkgs has no Python ${pythonVersion}");
 
-  buildPdmProject = pkgs.callPackage ./build-pdm-project.nix {
+  buildPdmProject = pkgs.callPackage ../build-pdm-project/default.nix {
     purifier = import (builtins.storePath purifier) { inherit (pkgs) lib; };
     pdm-with-plugin = builtins.storePath pdm;
   };

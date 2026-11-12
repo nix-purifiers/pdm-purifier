@@ -58,7 +58,7 @@ from pdm_purifier.transport import RECORD_ENV, normalize_name
 # only these versions of a pinned project.
 pinned_versions: dict[str, set[str]] = {}
 
-# The lock format this command writes. nix/lib/lock-version.nix holds the
+# The lock format this command writes. lib-overlays/default/lock-version.nix holds the
 # same number, and the Nix library refuses any other.
 FORMAT_VERSION = 2
 LOCKFILE = "pdm-purifier.lock.json"
