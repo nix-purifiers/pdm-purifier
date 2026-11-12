@@ -28,7 +28,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     root = ../..;
     fileset = lib.fileset.unions [
       ../../cli
-      ../../nix/lib
+      ../build-pdm-project
+      ./cli.nix
+      ../../lib-overlays/default
     ];
   };
 
@@ -38,7 +40,10 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     runHook preInstall
     mkdir -p $out/bin $out/share/pdm-purifier
     cp cli/pdm_purifier_cli.py $out/share/pdm-purifier/
-    cp -r nix/lib $out/share/pdm-purifier/nix-lib
+    mkdir -p $out/share/pdm-purifier/pkgs/cli
+    cp -r pkgs/build-pdm-project $out/share/pdm-purifier/pkgs/
+    cp pkgs/cli/cli.nix $out/share/pdm-purifier/pkgs/cli/
+    cp -r lib-overlays $out/share/pdm-purifier/
     makeWrapper ${python.interpreter} $out/bin/pdm-purifier \
       --add-flags "-I $out/share/pdm-purifier/pdm_purifier_cli.py" \
       --prefix PATH : ${
@@ -50,7 +55,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
           nix-prefetch-git
         ]
       } \
-      --set PDM_PURIFIER_NIX_LIB $out/share/pdm-purifier/nix-lib \
+      --set PDM_PURIFIER_NIX_LIB $out/share/pdm-purifier/pkgs/build-pdm-project \
       --set PDM_PURIFIER_NIXPKGS ${path} \
       --set PDM_PURIFIER_PDM ${pdm} \
       --set PDM_PURIFIER_LIBRARY ${purifierSource} \

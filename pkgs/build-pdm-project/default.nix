@@ -124,7 +124,7 @@ let
   # The lock in memory (read-lock.nix), which checkLock of the shared
   # library refuses with its problems, each naming `pdm-purifier lock`.
   lock = purifier.checkLock (
-    import ./read-lock.nix { inherit lib; } {
+    import ../../lib-overlays/default/read-lock.nix { inherit lib; } {
       inherit
         src
         projectDir

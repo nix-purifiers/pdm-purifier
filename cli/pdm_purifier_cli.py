@@ -171,7 +171,7 @@ def nix_build(root: Path, lockfile: Path, pdm_lock: Path, out_link: Path, **args
     src, project_dir = source_root(root, pdm_lock, lockfile)
     command = [
         "nix-build",
-        str(Path(setting("PDM_PURIFIER_NIX_LIB")) / "cli.nix"),
+        str(Path(setting("PDM_PURIFIER_NIX_LIB")) / "../cli/cli.nix"),
         "--argstr", "nixpkgs", setting("PDM_PURIFIER_NIXPKGS"),
         "--argstr", "pdm", setting("PDM_PURIFIER_PDM"),
         "--argstr", "purifier", setting("PDM_PURIFIER_LIBRARY"),
@@ -354,7 +354,7 @@ def local_distributions(root: Path, pdm_lock: Path | None = None) -> dict[str, s
     """The project's local distributions by name, with their paths: the
     project itself when PDM builds it, and each package pdm.lock names by a
     path to a directory. The Nix library finds the same ones
-    (nix/lib/build-pdm-project.nix)."""
+    (pkgs/build-pdm-project/default.nix)."""
     found = {}
     pyproject = tomllib.loads((root / "pyproject.toml").read_text())
     if pyproject.get("tool", {}).get("pdm", {}).get("distribution", "build-system" in pyproject):

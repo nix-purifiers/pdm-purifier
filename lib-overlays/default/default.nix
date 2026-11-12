@@ -5,14 +5,14 @@
 #
 #   lib.pdm-purifier.readLock { src, lockFile ? ..., pdmLock ? ..., projectDir ? "." }
 #
-# (nix/lib/read-lock.nix). The builder `buildPdmProject` is a package in
+# (lib-overlays/default/read-lock.nix). The builder `buildPdmProject` is a package in
 # `overlays.default`.
 { ... }:
 {
 
   overlay = final: prev: {
     pdm-purifier = (prev.pdm-purifier or { }) // {
-      readLock = import ../../nix/lib/read-lock.nix { lib = final; };
+      readLock = import ./read-lock.nix { lib = final; };
     };
   };
 

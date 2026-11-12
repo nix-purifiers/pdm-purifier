@@ -72,21 +72,21 @@ for every platform.
 
 ## The lock in memory
 
-`nix/lib/lock.nix` reads pdm-purifier.lock.json and refuses it when it has
+`lib-overlays/default/lock.nix` reads pdm-purifier.lock.json and refuses it when it has
 another format version, lacks a field, has a `contentHash` that does not
 match, has an `inputsHash` that does not match pdm.lock and pyproject.toml,
 lacks the URL of a file pdm.lock lists without one, or lacks the checkout of
 a version control package. Each refusal names `pdm-purifier lock`.
 
-`nix/lib/read-lock.nix` (`lib.pdm-purifier.readLock`) turns the result into
-the shape of the purifier contract: `entries` (`nix/lib/fetches.nix`),
+`lib-overlays/default/read-lock.nix` (`lib.pdm-purifier.readLock`) turns the result into
+the shape of the purifier contract: `entries` (`lib-overlays/default/fetches.nix`),
 `outputs`, and `problems`, which holds the refusal. The builder passes it to
 `checkLock` of the shared library, which fails evaluation with the
 problems, and takes the entries for its system with `entriesFor`.
 
 ## The Nix build
 
-`nix/lib/build-pdm-project.nix` takes, for each locked version, the wheels
+`pkgs/build-pdm-project/default.nix` takes, for each locked version, the wheels
 that install with the build's Python on the build's system, or else the
 sdist. The shared purifier library (github:nix-purifiers/purifier) decides
 which wheels install, from the tags in their file names, and fetches every
@@ -112,7 +112,7 @@ installed for `tests`.
 
 `pdm-purifier lock` and `update` run the plugin's lock command online and
 write the lockfile at `--lockfile`, `PDM_PURIFIER_LOCKFILE`, or next to
-pdm.lock. `prefetch` builds the manifest with Nix (`nix/lib/cli.nix`),
+pdm.lock. `prefetch` builds the manifest with Nix (`pkgs/cli/cli.nix`),
 keeps it alive with a GC root in `.pdm-purifier/` beside the lockfile, and
 installs every group with `pdm sync`. `publish` builds a distribution with
 Nix and runs `pdm publish --no-build` on what Nix built.
