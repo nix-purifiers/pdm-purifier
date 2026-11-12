@@ -22,7 +22,7 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "pdm-purifier";
-  version = lib.removeSuffix "\n" (builtins.readFile ../../version.txt);
+  version = import ../version.nix;
 
   src = lib.fileset.toSource {
     root = ../..;

@@ -5,26 +5,27 @@
 {
   lib,
   python3,
+  version ? import ../version.nix,
 }:
 let
   python = python3;
 in
 python.pkgs.buildPythonPackage {
   pname = "pdm-purifier";
-  version = lib.removeSuffix "\n" (builtins.readFile ../../version.txt);
+  inherit version;
   pyproject = true;
 
   src = lib.fileset.toSource {
     root = ../..;
     fileset = lib.fileset.unions [
-      ../../version.txt
       ../../plugin
     ];
   };
   sourceRoot = "source/plugin";
-  # setuptools reads the version only from inside the plugin directory.
+
   postPatch = ''
-    cp ../version.txt version.txt
+    substituteInPlace pyproject.toml \
+      --replace-fail 'version = "0.0.0.dev0"' 'version = "${version}"'
   '';
 
   build-system = [ python.pkgs.setuptools ];
